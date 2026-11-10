@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WALL·E – Explore the Movie</title>
+  <!-- Styles: style.css  |  Behaviour + ALL the content (TOPICS list): script.js -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<!-- data-mood = look of the planet: blue | polluted | hope.   data-view = home | topic -->
+<body data-mood="blue" data-view="home">
+  <noscript>Please enable JavaScript to explore this presentation.</noscript>
+
+  <!-- ===================== THE WORLD (background scene) ===================== -->
+  <div class="space" aria-hidden="true"></div>
+
+  <div class="stars" aria-hidden="true">
+    <div class="star-layer" data-count="46" data-size="1.5" data-px="5"></div>
+    <div class="star-layer" data-count="28" data-size="2.5" data-px="11"></div>
+    <div class="star-layer" data-count="14" data-size="3.5" data-px="20"></div>
+  </div>
+
+  <!-- A generic spaceship silhouette drifting far away -->
+  <div class="ship" aria-hidden="true"></div>
+
+  <!-- The planet: a giant circle whose top edge becomes the horizon. Three colour layers fade in/out. -->
+  <div class="planet-world" aria-hidden="true">
+    <div class="planet-layer planet-base"></div>
+    <div class="planet-layer planet-tint tint-rust"></div>
+    <div class="planet-layer planet-tint tint-hope"></div>
+    <div class="planet-layer planet-clouds"></div>
+  </div>
+  <div class="haze" aria-hidden="true"></div>
+  <div class="particles junk" aria-hidden="true"></div>   <!-- floating trash (polluted mood) -->
+  <div class="particles spores" aria-hidden="true"></div> <!-- floating sparkles & seeds (hope mood) -->
+
+  <!-- ===================== TOP BAR ===================== -->
+  <header class="hud">
+    <div class="badge" id="badge" data-part="0">🌍 Interactive map</div>
+    <div class="hud-tools">
+      <button class="hud-btn" id="mapBtn" type="button" hidden aria-label="Back to the planet map (Esc)">🌍 <span class="lbl">Map</span></button>
+      <button class="hud-btn" id="notesBtn" type="button" aria-pressed="false" aria-label="Show or hide speaker notes (N)">📝 <span class="lbl">Notes</span></button>
+      <button class="hud-btn" id="fsBtn" type="button" aria-label="Toggle fullscreen (F)">⛶ <span class="lbl">Fullscreen</span></button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===================== HOME: planet + topic bubbles ===================== -->
+    <section class="home" id="home" aria-label="Movie map: choose a topic">
+      <div class="home-title">
+        <p class="eyebrow">English class presentation</p>
+        <h1>WALL<span class="title-dot">·</span>E</h1>
+        <p class="subtitle">A Movie Review &nbsp;•&nbsp; Pixar • 2008</p>
+      </div>
+
+      <!-- Dotted constellation that connects the bubbles in speaking order (drawn by script.js) -->
+      <svg class="orbit" id="orbit" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+      <!-- The topic bubbles are created by script.js from the TOPICS list -->
+      <div class="map" id="map"></div>
+
+      <div class="home-actions">
+        <span class="chip chip-gold">● Speaker 1: <span class="name" contenteditable="true" spellcheck="false" role="textbox" aria-label="Speaker 1 name">Mariana Vargas</span></span>
+        <span class="chip chip-cyan">● Speaker 2: <span class="name" contenteditable="true" spellcheck="false" role="textbox" aria-label="Speaker 2 name">José Galeano</span></span>
+        <button class="start-btn" id="startBtn" type="button">▶ Start the journey</button>
+      </div>
+      <p class="home-hint">Click a bubble to explore it · or press <kbd>→</kbd> to follow the story</p>
+    </section>
+
+    <!-- ===================== TOPIC VIEW: core bubble + data satellites ===================== -->
+    <section class="topic-view" id="topicView" data-part="1" inert aria-label="Topic details">
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <svg class="links" id="links" aria-hidden="true"></svg>
+      <div class="core" id="core"></div>
+      <div class="sats" id="sats"></div>
+      <!-- Non-radial layouts (split, carousel, timeline, cards, curve, audience) are built here by script.js -->
+      <div class="stage-box" id="stageBox" hidden></div>
+      <div class="topic-foot" id="topicFoot">
+        <button class="action-btn" id="actionBtn" type="button" hidden></button>
+        <p class="foot-line" id="footLine" hidden></p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== SPEAKER NOTES (N) ===================== -->
+  <aside class="notes-panel" id="notesPanel" hidden aria-live="polite">
+    <h3 id="notesTitle">Speaker notes</h3>
+    <p id="notesText"></p>
+  </aside>
+
+  <!-- ===================== BOTTOM NAVIGATION ===================== -->
+  <nav class="controls" aria-label="Topic navigation">
+    <button class="nav-btn" id="prevBtn" type="button" aria-label="Previous topic">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav-btn" id="nextBtn" type="button" aria-label="Next topic">›</button>
+  </nav>
+
+  <script src="script.js"></script>
+</body>
+</html>

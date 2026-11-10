@@ -1,0 +1,14 @@
+IMAGENES DE LA PRESENTACION  /  IMAGES FOR THE PRESENTATION
+===========================================================
+Pon aqui tus 6 imagenes con estos nombres (.jpg, .jpeg, .png o .webp):
+Put your 6 images here with these names:
+
+  slide-1  ->  Introduction                      (poster oficial de WALL·E o imagen promocional ancha)
+  slide-2  ->  The Story and Main Character      (WALL·E solo en una Tierra llena de basura)
+  slide-3  ->  WALL·E Meets EVE                  (WALL·E y EVE juntos, o WALL·E mostrando la plantita; mejor horizontal/ancha)
+  slide-4  ->  Our Opinion                       (escena favorita: WALL·E y EVE bailando en el espacio)
+  slide-5  ->  The Movie's Message               (Tierra cubierta de basura o la plantita creciendo)
+  slide-6  ->  Recommendation and Conclusion     (imagen final feliz: WALL·E y EVE juntos / planta en una Tierra verde)
+
+Ejemplo: slide-1.jpg, slide-2.png ...
+Recarga la pagina (Ctrl+F5) y las imagenes aparecen solas; no hay que editar codigo.
