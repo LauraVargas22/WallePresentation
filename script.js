@@ -124,7 +124,7 @@
   function buildStars() {
     $$('.star-layer').forEach((layer) => {
       const count = Number(layer.dataset.count) || 20;
-      const size = Number(layer.dataset.size) || 2;
+      const size = (Number(layer.dataset.size) || 2) * ((parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) / 16);   // bigger stars on TVs
       layer.style.setProperty('--px', `${layer.dataset.px || 5}px`);
       const frag = document.createDocumentFragment();
       for (let i = 0; i < count; i++) {
@@ -351,6 +351,35 @@
 
     LAYOUTS[layout](t);
     if (radial) layoutTopic();
+    fitStage();
+    setTimeout(() => { if (TOPICS[view] === t) fitStage(); }, 400);    // once fonts / images have settled
+  }
+
+  // Small PC screens: shrink the content a little so it ALWAYS fits and no vertical scroll bar appears.
+  // (On phones, <= 720 px wide, the content scrolls instead so the text stays readable.)
+  function fitStage() {
+    if (view < 0) return;
+    const stack = topicView.classList.contains('stack');
+    const useBox = !stageBox.hidden;
+    const els = useBox ? [stageBox.firstElementChild] : (stack ? [core, satsBox] : []);
+    els.forEach((e) => { if (e) e.style.zoom = ''; });
+    if (!els.length || !els[0] || window.innerWidth <= 720) return;
+
+    const measure = () => {
+      if (useBox) {
+        return { need: els[0].getBoundingClientRect().height, avail: stageBox.clientHeight };
+      }
+      const cs = getComputedStyle(topicView);
+      const avail = topicView.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+      return { need: satsBox.getBoundingClientRect().bottom - core.getBoundingClientRect().top, avail };
+    };
+    let z = 1;
+    for (let i = 0; i < 12; i++) {
+      const { need, avail } = measure();
+      if (need <= avail + 1 || z <= 0.45) break;
+      z = Math.max(0.45, z * (avail / need) * 0.985);
+      els.forEach((e) => { e.style.zoom = String(z); });
+    }
   }
 
   /* ----- LAYOUT: radial (the photo goes INSIDE the big circle; boxes around it) ----- */
@@ -378,6 +407,7 @@
     const t = TOPICS[view];
     if (!t || (t.layout || 'radial') !== 'radial') return;
     const vw = window.innerWidth, vh = window.innerHeight;
+    const u = (parseFloat(getComputedStyle(document.documentElement).fontSize) || 16) / 16;   // TV scale (1 = normal)
     links.replaceChildren();
     topicView.classList.remove('stack');                     // measure in radial mode first
     const sats = $$('.sat', satsBox);
@@ -391,13 +421,13 @@
     const cardH = sats.reduce((m, s) => Math.max(m, s.offsetHeight), 70);
     const coreR = core.offsetWidth / 2;
 
-    const rx = Math.min(vw * 0.34, vw / 2 - cardW / 2 - 14);
-    let ry = Math.min(vh * 0.31, 270);
-    ry = Math.min(ry, cy - 64 - cardH / 2, vh - 86 - cardH / 2 - cy);
-    ry = Math.max(ry, coreR + cardH / 2 + 10);
+    const rx = Math.min(vw * 0.34, vw / 2 - cardW / 2 - 14 * u);
+    let ry = Math.min(vh * 0.31, 270 * u);
+    ry = Math.min(ry, cy - 64 * u - cardH / 2, vh - 86 * u - cardH / 2 - cy);
+    ry = Math.max(ry, coreR + cardH / 2 + 10 * u);
     const plan = angles.map((deg) => ({ x: cx + Math.cos((deg * Math.PI) / 180) * rx, y: cy + Math.sin((deg * Math.PI) / 180) * ry }));
 
-    if (vw < 860 || vh < 480 || !fitsRadial(plan, cardW, cardH, vw, vh, cx, cy, coreR)) {
+    if (vw < 860 * u || vh < 480 * u || !fitsRadial(plan, cardW, cardH, vw, vh, cx, cy, coreR, u)) {
       topicView.classList.add('stack');
       sats.forEach((s) => { s.style.left = ''; s.style.top = ''; s.style.setProperty('--fx', '0px'); s.style.setProperty('--fy', '-60px'); });
       return;
@@ -426,13 +456,13 @@
   }
 
   // true when every box is on screen, clear of the bars, the core and the other boxes
-  function fitsRadial(plan, w, h, vw, vh, cx, cy, coreR) {
-    const M = 8;
+  function fitsRadial(plan, w, h, vw, vh, cx, cy, coreR, u = 1) {
+    const M = 8 * u;
     for (const p of plan) {
       const l = p.x - w / 2, r = p.x + w / 2, tp = p.y - h / 2, b = p.y + h / 2;
-      if (l < M || r > vw - M || tp < 58 || b > vh - 78) return false;
+      if (l < M || r > vw - M || tp < 58 * u || b > vh - 78 * u) return false;
       const dx = Math.max(l - cx, 0, cx - r), dy = Math.max(tp - cy, 0, cy - b);
-      if (Math.hypot(dx, dy) < coreR + 6) return false;
+      if (Math.hypot(dx, dy) < coreR + 6 * u) return false;
     }
     for (let i = 0; i < plan.length; i++) {
       for (let j = i + 1; j < plan.length; j++) {
@@ -738,7 +768,7 @@
     let rz;
     window.addEventListener('resize', () => {                // keep the boxes around the core on resize
       clearTimeout(rz);
-      rz = setTimeout(() => { if (view >= 0) layoutTopic(); }, 120);
+      rz = setTimeout(() => { if (view >= 0) { layoutTopic(); fitStage(); } }, 120);
     });
 
     initKeyboard();
