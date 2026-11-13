@@ -368,6 +368,8 @@ button.row:hover { scale: 1.03; }
 @media (max-width: 720px) {
   .hud-btn .lbl { display: none; }
   .dots { display: none; }
+  /* Keep prev/next on the left so the Netlify badge (bottom-right) doesn't cover them */
+  .controls { justify-content: flex-start; gap: 0.6rem; }
   .topic-view:not(.layout-radial) .core { top: 3.9rem; }
 
   .fgrid { grid-template-columns: 1fr; }
